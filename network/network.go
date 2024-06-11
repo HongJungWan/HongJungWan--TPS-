@@ -23,6 +23,11 @@ func NewServer() *Network {
 		AllowCredentials: true,
 	}))
 
+	runner := NewRoom()
+	go runner.RunInit()
+
+	network.engin.GET("/room", runner.SocketServe)
+
 	return network
 }
 
