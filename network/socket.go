@@ -57,6 +57,10 @@ func (client *Client) Read() {
 		var message *Message
 		err := client.Socket.ReadJSON(&message)
 		if err != nil {
+			// 클라이언트와의 WebSocket 연결이 예상치 못하게 종료되는 경우를 처리
+			if !websocket.IsUnexpectedCloseError(err, websocket.CloseGoingAway) {
+				break
+			}
 			panic(err)
 		} else {
 			log.Println("READ : ", message, "Client", client.Name)
