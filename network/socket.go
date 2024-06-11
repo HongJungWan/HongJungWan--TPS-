@@ -53,4 +53,20 @@ func (room *Room) SocketServe(context *gin.Context) {
 	if err != nil {
 		panic(err)
 	}
+
+	userCookie, err := context.Request.Cookie("auth")
+	if err != nil {
+		panic(err)
+	}
+
+	client := &Client{
+		Send:   make(chan *Message, types.MessageBufferSize),
+		Room:   room,
+		Name:   userCookie.Value,
+		Socket: socket,
+	}
+
+	room.Join <- client
+
+	defer func() { room.Leave <- client }()
 }
