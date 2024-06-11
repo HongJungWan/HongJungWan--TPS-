@@ -4,6 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/websocket"
 	"go_chat/types"
+	"log"
 	"net/http"
 	"time"
 )
@@ -58,6 +59,9 @@ func (client *Client) Read() {
 		if err != nil {
 			panic(err)
 		} else {
+			log.Println("READ : ", message, "Client", client.Name)
+			log.Println()
+
 			message.Time = time.Now().Unix()
 			message.Name = client.Name
 
@@ -71,6 +75,9 @@ func (client *Client) Write() {
 	defer client.Socket.Close()
 
 	for message := range client.Send {
+		log.Println("WRITE : ", message, "Client", client.Name)
+		log.Println()
+
 		err := client.Socket.WriteJSON(message)
 		if err != nil {
 			panic(err)
@@ -84,12 +91,10 @@ func (room *Room) RunInit() {
 		select {
 		case client := <-room.Join:
 			room.Clients[client] = true
-
 		case client := <-room.Leave:
 			room.Clients[client] = false
 			close(client.Send)
 			delete(room.Clients, client)
-
 		case message := <-room.Forward:
 			for client := range room.Clients {
 				client.Send <- message
