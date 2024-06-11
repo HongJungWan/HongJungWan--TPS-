@@ -5,6 +5,7 @@ import (
 	"github.com/gorilla/websocket"
 	"go_chat/types"
 	"net/http"
+	"time"
 )
 
 var Upgrader = &websocket.Upgrader{
@@ -45,6 +46,35 @@ func NewRoom() *Room {
 		Leave: make(chan *Client),
 
 		Clients: map[*Client]bool{},
+	}
+}
+
+func (client *Client) Read() {
+	// 클라이언트가 들어오는 메시지를 읽는 함수
+	defer client.Socket.Close()
+	for {
+		var message *Message
+		err := client.Socket.ReadJSON(&message)
+		if err != nil {
+			panic(err)
+		} else {
+			message.Time = time.Now().Unix()
+			message.Name = client.Name
+
+			client.Room.Forward <- message
+		}
+	}
+}
+
+func (client *Client) Write() {
+	// 클라이언트가 메시지를 전송하는 함수
+	defer client.Socket.Close()
+
+	for message := range client.Send {
+		err := client.Socket.WriteJSON(message)
+		if err != nil {
+			panic(err)
+		}
 	}
 }
 
@@ -89,4 +119,8 @@ func (room *Room) SocketServe(context *gin.Context) {
 	room.Join <- client
 
 	defer func() { room.Leave <- client }()
+
+	go client.Write()
+
+	client.Read()
 }
