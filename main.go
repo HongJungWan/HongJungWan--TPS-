@@ -4,7 +4,9 @@ import (
 	"flag"
 	"fmt"
 	config "go_chat/config"
+	"go_chat/network"
 	"go_chat/repository"
+	"go_chat/service"
 )
 
 var pathFlag = flag.String("config", "./config.toml", "config set")
@@ -19,6 +21,7 @@ func main() {
 	if rep, err := repository.NewRepository(cfg); err != nil {
 		panic(err)
 	} else {
-		fmt.Println(rep)
+		server := network.NewServer(service.NewService(rep), *port)
+		server.StartServer()
 	}
 }
