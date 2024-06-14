@@ -32,11 +32,11 @@ func NewRepository(cfg *config.Config) (*Repository, error) {
 	return repository, nil
 }
 
-func (s *Repository) Room(name string) (*schema.Room, error) {
+func (repository *Repository) Room(name string) (*schema.Room, error) {
 	domain := new(schema.Room)
 	queryString := query([]string{})
 
-	err := s.db.QueryRow(queryString, name).Scan(
+	err := repository.db.QueryRow(queryString, name).Scan(
 		&domain.ID,
 		&domain.Name,
 		&domain.CreateAt,
