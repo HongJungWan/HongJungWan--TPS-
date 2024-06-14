@@ -18,11 +18,11 @@ type Server struct {
 }
 
 func NewServer(service *service.Service, port string) *Server {
-	s := &Server{engine: gin.New(), service: service, port: port}
+	server := &Server{engine: gin.New(), service: service, port: port}
 
-	s.engine.Use(gin.Logger())
-	s.engine.Use(gin.Recovery())
-	s.engine.Use(cors.New(cors.Config{
+	server.engine.Use(gin.Logger())
+	server.engine.Use(gin.Recovery())
+	server.engine.Use(cors.New(cors.Config{
 		AllowOrigins:     []string{"*"},
 		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "PATCH"},
 		AllowHeaders:     []string{"ORIGIN", "Content-Length", "Content-Type", "Access-Control-Allow-Headers", "Access-Control-Allow-Origin", "Authorization", "X-Requested-With", "expires"},
@@ -33,11 +33,11 @@ func NewServer(service *service.Service, port string) *Server {
 		},
 	}))
 
-	registerServer(s)
+	registerServer(server)
 
-	return s
+	return server
 }
 
-func (s *Server) StartServer() error {
-	return s.engine.Run(s.port)
+func (server *Server) StartServer() error {
+	return server.engine.Run(server.port)
 }
