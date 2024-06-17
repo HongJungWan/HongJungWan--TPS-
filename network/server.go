@@ -1,3 +1,5 @@
+// 서버의 API 엔드포인트를 정의하고 요청 핸들러를 등록하는 역할
+
 package network
 
 import "github.com/gin-gonic/gin"

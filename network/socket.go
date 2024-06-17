@@ -1,3 +1,5 @@
+// WebSocket 통신을 처리하며 클라이언트와의 실시간 메시지 교환 및 방 관리하는 역할
+
 package network
 
 import (
