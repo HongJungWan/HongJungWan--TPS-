@@ -1,3 +1,5 @@
+// 애플리케이션의 설정과 환경 변수를 로드하고 관리하는 역할
+
 package config
 
 import (

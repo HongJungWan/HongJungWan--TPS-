@@ -1,3 +1,5 @@
+// 서버 설정 및 초기화를 담당하고 CORS 설정을 적용하여 서버를 실행하는 역할
+
 package network
 
 import (
