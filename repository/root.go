@@ -89,16 +89,16 @@ func (repository *Repository) RoomList() ([]*schema.Room, error) {
 	}
 }
 
-func (repository *Repository) MakeRoom(name string) error {
-	_, err := repository.db.Exec("INSERT INTO chatting.room(name) VALUES(?)", name)
+func (repository *Repository) MakeRoom(roomName string) error {
+	_, err := repository.db.Exec("INSERT INTO chatting.room(name) VALUES(?)", roomName)
 	return err
 }
 
-func (repository *Repository) Room(name string) (*schema.Room, error) {
+func (repository *Repository) Room(roomName string) (*schema.Room, error) {
 	domain := new(schema.Room)
 	queryString := query([]string{})
 
-	err := repository.db.QueryRow(queryString, name).
+	err := repository.db.QueryRow(queryString, roomName).
 		Scan(
 			&domain.ID,
 			&domain.Name,
