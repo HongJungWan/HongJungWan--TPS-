@@ -2,6 +2,7 @@ package repository
 
 import (
 	"database/sql"
+	"errors"
 	"go_chat/config"
 	"go_chat/types/schema"
 	"strings"
@@ -96,15 +97,14 @@ func (repository *Repository) MakeRoom(roomName string) error {
 
 func (repository *Repository) Room(roomName string) (*schema.Room, error) {
 	domain := new(schema.Room)
-	queryString := query([]string{})
+	queryString := query([]string{"SELECT * FROM", room, "WHERE name = ?"})
 
 	err := repository.db.QueryRow(queryString, roomName).
-		Scan(
-			&domain.ID,
-			&domain.Name,
-			&domain.CreateAt,
-			&domain.UpdateAt,
-		)
+		Scan(&domain.ID, &domain.Name, &domain.CreateAt, &domain.UpdateAt)
+
+	if errors.Is(err, sql.ErrNoRows) {
+		return nil, nil
+	}
 	return domain, err
 }
 
