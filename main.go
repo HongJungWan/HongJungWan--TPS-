@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
+	_ "github.com/go-sql-driver/mysql"
 	config "go_chat/config"
 	"go_chat/network"
 	"go_chat/repository"
