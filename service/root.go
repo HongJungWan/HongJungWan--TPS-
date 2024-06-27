@@ -15,6 +15,12 @@ func NewService(repository *repository.Repository) *Service {
 	return service
 }
 
+func (service *Service) InsertChatting(user, message, roomName string) {
+	if err := service.repository.InsertChatting(user, message, roomName); err != nil {
+		log.Println("Failed To Chat", "err", err)
+	}
+}
+
 func (service *Service) EnterRoom(roomName string) ([]*schema.Chat, error) {
 	if response, err := service.repository.GetChatList(roomName); err != nil {
 		log.Println("Failed To Get EnterRoom", "err", err.Error())

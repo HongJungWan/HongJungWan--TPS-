@@ -13,12 +13,17 @@ type api struct {
 }
 
 func registerServer(server *Server) {
-	a := &api{server: server}
+	apis := &api{server: server}
 
-	server.engine.GET("/room-list", a.roomList)
-	server.engine.GET("/room", a.room)
-	server.engine.POST("/make-room", a.makeRoom)
-	server.engine.GET("/enter-room", a.enterRoom)
+	server.engine.GET("/room-list", apis.roomList)
+	server.engine.GET("/room", apis.room)
+	server.engine.POST("/make-room", apis.makeRoom)
+	server.engine.GET("/enter-room", apis.enterRoom)
+
+	room := NewRoom(server.service)
+	go room.Run()
+
+	server.engine.GET("/room-chat", room.ServeHTTP)
 }
 
 func (a *api) roomList(context *gin.Context) {

@@ -5,15 +5,13 @@ package network
 import (
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
-	"go_chat/repository"
 	"go_chat/service"
 )
 
 type Server struct {
 	engine *gin.Engine
 
-	service    *service.Service
-	repository *repository.Repository
+	service *service.Service
 
 	port string
 	ip   string
